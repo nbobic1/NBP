@@ -1,20 +1,17 @@
-package ba.menit.nbp.entity;
+package ba.menit.nbp.entities;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="Doctor")
-public class Doctor {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private Double amount;
+
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
-
-    private Long hospitalId;
-
-    @Column(length = 255)
-    private String seniority;
 }
-

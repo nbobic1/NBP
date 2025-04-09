@@ -1,4 +1,4 @@
-package ba.menit.nbp.entity;
+package ba.menit.nbp.entities;
 
 import jakarta.persistence.*;
 

@@ -1,4 +1,4 @@
-package ba.menit.nbp.controller;
+package ba.menit.nbp.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
