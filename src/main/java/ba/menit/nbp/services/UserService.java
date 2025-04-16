@@ -24,22 +24,22 @@ public class UserService {
     }
 
     public List<User> getAll() {
-        return userRepository.findAll();
+        return (List<User>) userRepository.findAll();
     }
 
-    public User update(Long id, User updatedUser) {
-        User existingUser = getById(id);
-        existingUser.setFirstName(updatedUser.getFirstName());
-        existingUser.setLastName(updatedUser.getLastName());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPassword(updatedUser.getPassword());
-        existingUser.setUsername(updatedUser.getUsername());
-        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-        existingUser.setBirthDate(updatedUser.getBirthDate());
-        existingUser.setAddressId(updatedUser.getAddressId());
-//        existingUser.setRole(updatedUser.getRole());
-        return userRepository.save(existingUser);
-    }
+//    public User update(Long id, User updatedUser) {
+//        User existingUser = getById(id);
+//        existingUser.setFirstName(updatedUser.getFirstName());
+//        existingUser.setLastName(updatedUser.getLastName());
+//        existingUser.setEmail(updatedUser.getEmail());
+//        existingUser.setPassword(updatedUser.getPassword());
+//        existingUser.setUsername(updatedUser.getUsername());
+//        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+//        existingUser.setBirthDate(updatedUser.getBirthDate());
+//        existingUser.setAddressId(updatedUser.getAddressId());
+////        existingUser.setRole(updatedUser.getRole());
+//        return userRepository.save(existingUser);
+//    }
 
     public void delete(Long id) {
         userRepository.deleteById(id);
