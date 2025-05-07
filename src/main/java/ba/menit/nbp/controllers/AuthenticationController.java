@@ -8,10 +8,7 @@ import ba.menit.nbp.services.AuthenticationService;
 import ba.menit.nbp.services.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
 @RestController
@@ -51,4 +48,21 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(loginResponse);
     }
+
+    @PostMapping("/request-reset-password")
+    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
+        String baseUrl = "http://localhost:4200"; // Or read from config
+        authenticationService.initiatePasswordReset(email, baseUrl);
+        return ResponseEntity.ok("If your email exists, a password reset link has been sent.");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        boolean result = authenticationService.resetPassword(token, newPassword);
+        return result
+                ? ResponseEntity.ok("Password successfully reset.")
+                : ResponseEntity.badRequest().body("Invalid or expired token.");
+    }
+
+
 }
