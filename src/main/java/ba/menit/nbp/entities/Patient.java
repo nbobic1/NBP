@@ -49,4 +49,20 @@ public class Patient {
     public void setInsuranceId(Long insuranceId) {
         this.insuranceId = insuranceId;
     }
+
+    public Patient() {
+    }
+
+    public Patient(User user, String medicalRecordNumber, Long insuranceId) {
+        this.user = user;
+        this.medicalRecordNumber = medicalRecordNumber;
+        this.insuranceId = insuranceId;
+    }
+
+    public Patient(Long id, User user, String medicalRecordNumber, Long insuranceId) {
+        this.id = id;
+        this.user = user;
+        this.medicalRecordNumber = medicalRecordNumber;
+        this.insuranceId = insuranceId;
+    }
 }

@@ -38,4 +38,19 @@ public class Insurance {
     public void setCoverageDetails(String coverageDetails) {
         this.coverageDetails = coverageDetails;
     }
+
+
+    public Insurance() {
+    }
+
+    public Insurance(String insuranceName, String coverageDetails) {
+        this.insuranceName = insuranceName;
+        this.coverageDetails = coverageDetails;
+    }
+
+    public Insurance(Long id, String insuranceName, String coverageDetails) {
+        this.id = id;
+        this.insuranceName = insuranceName;
+        this.coverageDetails = coverageDetails;
+    }
 }

@@ -1,8 +1,17 @@
 package ba.menit.nbp.entities;
 
+import ba.menit.nbp.dtos.DoctorStatsDto;
 import jakarta.persistence.*;
 
 @Entity
+@NamedStoredProcedureQuery(
+        name = "Doctor.getStatistics",
+        procedureName = "GET_DOCTOR_STATISTICS",
+        resultClasses = DoctorStatsDto.class,
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "p_cursor", type = void.class)
+        }
+)
 @Table(name="Doctor")
 public class Doctor {
     @Id
@@ -46,6 +55,22 @@ public class Doctor {
     }
 
     public void setSeniority(String seniority) {
+        this.seniority = seniority;
+    }
+
+    public Doctor() {
+    }
+
+    public Doctor(User user, Long hospitalId, String seniority) {
+        this.user = user;
+        this.hospitalId = hospitalId;
+        this.seniority = seniority;
+    }
+
+    public Doctor(Long id, User user, Long hospitalId, String seniority) {
+        this.id = id;
+        this.user = user;
+        this.hospitalId = hospitalId;
         this.seniority = seniority;
     }
 }

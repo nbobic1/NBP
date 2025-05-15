@@ -18,6 +18,10 @@ public class Appointment {
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
+
     public Long getId() {
         return id;
     }
@@ -39,6 +43,21 @@ public class Appointment {
     }
 
     public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public Appointment() {
+
+    }
+
+    public Appointment(LocalDateTime startTime, Doctor doctor) {
+        this.startTime = startTime;
+        this.doctor = doctor;
+    }
+
+    public Appointment(Long id, LocalDateTime startTime, Doctor doctor) {
+        this.id = id;
+        this.startTime = startTime;
         this.doctor = doctor;
     }
 }

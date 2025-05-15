@@ -3,16 +3,20 @@ package ba.menit.nbp.controllers;
 
 import ba.menit.nbp.entities.Doctor;
 import ba.menit.nbp.services.DoctorService;
+import ba.menit.nbp.services.PdfExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/doctors")
 public class DoctorController {
-
+    @Autowired
+    private PdfExportService pdfExportService;
     @Autowired
     private DoctorService doctorService;
 
@@ -29,6 +33,22 @@ public class DoctorController {
     @GetMapping
     public ResponseEntity<List<Doctor>> getAll() {
         return ResponseEntity.ok(doctorService.getAll());
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<List<Map<String, Object>>> getStats() {
+        return ResponseEntity.ok(doctorService.getStats());
+    }
+
+    @GetMapping("/stats/pdf")
+    public ResponseEntity<byte[]> exportStatsPdf() {
+        List<Map<String, Object>> stats = doctorService.getStats();
+        ByteArrayInputStream pdfStream = pdfExportService.exportDoctorStats(stats);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=doctor-stats.pdf")
+                .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                .body(pdfStream.readAllBytes());
     }
 
     @PutMapping("/{id}")

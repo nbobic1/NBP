@@ -16,9 +16,13 @@ import java.util.List;
 @Table(name = "\"user\"")
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
+@SequenceGenerator(name = "user_seq_gen", sequenceName = "user_seq", allocationSize = 1)
+private Long id;
+//    private Integer id;
 
     @Pattern(regexp = ValidationRegexes.onlyLettersRegex,message = "Ime moze sadrzavati samo slova")
     @NotBlank(message = "Ime ne može biti prazno")
@@ -34,10 +38,24 @@ public class User implements UserDetails {
     private String password;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
+    public User(String email, String firstName, String lastName, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String email,String firstName, String lastName,  String password, Role role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
     public Role getRole() {
         return this.role;
@@ -69,7 +87,7 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -122,6 +140,9 @@ public class User implements UserDetails {
         return List.of(authority);
     }
 
+
+
+
     @Override
     public String getPassword() {
         return this.password;
@@ -150,5 +171,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+
+    public User(Long id, String firstName, String lastName, String email, String password, Role role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 }

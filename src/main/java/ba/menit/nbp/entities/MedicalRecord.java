@@ -79,4 +79,27 @@ public class MedicalRecord {
     }
 
     private LocalDateTime recordDate;
+
+    public MedicalRecord() {
+    }
+
+    public MedicalRecord(Patient patient, Long doctorId, Long appointmentId, String diagnosis, String treatment, LocalDateTime recordDate) {
+        this.patient = patient;
+        this.doctorId = doctorId;
+        this.appointmentId = appointmentId;
+        this.diagnosis = diagnosis;
+        this.treatment = treatment;
+        this.recordDate = recordDate;
+    }
+
+    public MedicalRecord(Long id, Patient patient, Long doctorId, Long appointmentId, String diagnosis, String treatment, LocalDateTime recordDate) {
+
+        this.id = id;
+        this.patient = patient;
+        this.doctorId = doctorId;
+        this.appointmentId = appointmentId;
+        this.diagnosis = diagnosis;
+        this.treatment = treatment;
+        this.recordDate = recordDate;
+    }
 }

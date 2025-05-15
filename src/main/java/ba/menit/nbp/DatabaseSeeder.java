@@ -1,157 +1,123 @@
-//package ba.menit.nbp;
-//
-//import ba.menit.nbp.entities.*;
-//import ba.menit.nbp.repositories.*;
-//import org.springframework.boot.CommandLineRunner;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//
-//import java.time.LocalDate;
-//import java.time.LocalDateTime;
-//import java.util.List;
-//
-//@Configuration
-//public class DatabaseSeeder {
-//
-//    @Bean
-//    public CommandLineRunner initData(
-//            UserRepository userRepo,
-//            RoleRepository roleRepo,
-////            NpbLogRepository logRepo,
-////            NpbAppsRepository appsRepo,
-////            HospitalRepository hospitalRepo,
-//            DoctorRepository doctorRepo,
-//            PatientRepository patientRepo,
-//            InsuranceRepository insuranceRepo,
-//            AppointmentRepository appointmentRepo,
-//            MedicalRecordRepository medicalRecordRepo
-////            ServiceRepository serviceRepo,
-////            PaymentRepository paymentRepo,
-////            MedicationRepository medicationRepo,
-////            PrescriptionRepository prescriptionRepo
-//    ) {
-//        return args -> {
-//
-//            // Roles
-////            Role adminRole = new Role();
-////            adminRole.setName(RoleEnum.ADMIN);
-////
-//////            Role doctorRole = new Role();
-//////            adminRole.setName(RoleEnum.PATIENT);
-////
-////
-////            Role patientRole = new Role();
-////            adminRole.setName(RoleEnum.PATIENT);
-//
-////            roleRepo.saveAll(List.of(adminRole, doctorRole, patientRole));
-//
-//            // Users
-//            User user1 = new User();
-//            user1.setFirstName("John");
-//            user1.setLastName("Doe");
-//            user1.setEmail("john@example.com");
-//            user1.setPassword("secret");
-////            user1.set("johnd");
-////            user1.setPhoneNumber("123456789");
-////            user1.set(LocalDate.of(1990, 1, 1));
-////            user1.setRole(adminRole);
-//
-//            User user2 = new User();
-//            user2.setFirstName("Jane");
-//            user2.setLastName("Smith");
-//            user2.setEmail("jane@example.com");
-//            user2.setPassword("secret");
-////            user2.setUsername("janes");
-////            user2.setPhoneNumber("987654321");
-////            user2.setBirthDate(LocalDate.of(1985, 6, 15));
-////            user2.setRole(patientRole);
-//
-//            userRepo.saveAll(List.of(user1, user2));
-//
-//            // Insurance
-//            Insurance insurance = new Insurance();
-//            insurance.setInsuranceName("Basic Health Plan");
-//            insurance.setCoverageDetails("Full outpatient and inpatient coverage.");
-//            insuranceRepo.save(insurance);
-//
-//            // Hospital
-////            Hospital hospital = new Hospital();
-////            hospital.setName("Central Hospital");
-////            hospital.setStreetName("Main Avenue 123");
-////            hospitalRepo.save(hospital);hospital
-//
-//            // Doctor
-//            Doctor doctor = new Doctor();
-//            doctor.setUser(user1);
-////            doctor.setHospital(hospital);
-//            doctor.setSeniority("Senior");
-//            doctorRepo.save(doctor);
-//
-//            // Patient
-//            Patient patient = new Patient();
-//            patient.setUser(user2);
-//            patient.setMedicalRecordNumber("MRN12345");
-////            patient.setInsurance(insurance);
-//            patientRepo.save(patient);
-//
-//            // Appointment
-//            Appointment appointment = new Appointment();
-//            appointment.setDoctor(doctor);
-//            appointment.setStartTime(LocalDateTime.now().plusDays(1));
-//            appointmentRepo.save(appointment);
-//
-//            // Medical Record
-//            MedicalRecord record = new MedicalRecord();
-//            record.setPatient(patient);
-////            record.setDoctor(doctor);
-////            record.setAppointment(appointment);
-//            record.setDiagnosis("Common Cold");
-//            record.setTreatment("Rest and fluids");
-//            record.setRecordDate(LocalDateTime.now());
-//            medicalRecordRepo.save(record);
-//
-//            // Medication
-////            Medication medication = new Medication();
-////            medication.setName("Paracetamol");
-////            medication.setDescription("Used for pain relief and fever reduction");
-////            medication.setDosage("500mg");
-////            medicationRepo.save(medication);
-//
-//            // Prescription
-////            Prescription prescription = new Prescription();
-////            prescription.setMedicalRecord(record);
-////            prescription.setMedication(medication);
-////            prescription.setQuantity(10);
-////            prescription.setInstructions("Take two tablets daily after meals");
-////            prescriptionRepo.save(prescription);
-//
-//            // Services
-////            Service service = new Service();
-////            service.setName("General Consultation");
-////            service.setPrice(50.0);
-////            service.setDurationInMin(30);
-////            serviceRepo.save(service);
-//
-//            // Payment
-////            Payment payment = new Payment();
-////            payment.setAmount(75.0);
-////            payment.setUser(user2);
-////            paymentRepo.save(payment);
-////
-////            // Apps
-////            NpbApp app = new NpbApp();
-////            app.setAppId("APP001");
-////            app.setManager(user1);
-////            app.setExpiryDate(LocalDate.now().plusYears(1));
-////            appsRepo.save(app);
-////
-////            // Logs
-////            NpbLog log = new NpbLog();
-////            log.setActionName("INSERT");
-////            log.setTableName("NPB_USER");
-////            log.setDateTime(LocalDateTime.now());
-////            log.setDbUser(user1.getEmail());
-////            logRepo.save(log);
-//        };
-//    }
-//}
+package ba.menit.nbp;
+
+import ba.menit.nbp.entities.*;
+import ba.menit.nbp.repositories.*;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import jakarta.persistence.EntityManager;
+
+@Configuration
+public class DatabaseSeeder {
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Bean
+    @Transactional
+    public CommandLineRunner initData(
+            UserRepository userRepo,
+            RoleRepository roleRepo,
+            NbpAppsRepository appsRepo,
+            HospitalRepository hospitalRepo,
+            DoctorRepository doctorRepo,
+            PatientRepository patientRepo,
+            InsuranceRepository insuranceRepo,
+            AppointmentRepository appointmentRepo,
+            MedicalRecordRepository medicalRecordRepo,
+            ServiceRepository serviceRepo,
+            PaymentRepository paymentRepo,
+            MedicationRepository medicationRepo,
+            PrescriptionRepository prescriptionRepo
+    ) {
+        return args -> {
+            // Create roles if they don't exist
+            for (RoleEnum roleEnum : RoleEnum.values()) {
+                roleRepo.findByName(roleEnum).orElseGet(() -> roleRepo.save(new Role(roleEnum)));
+            }
+
+            // Fetch managed roles
+            Role adminRole = roleRepo.findByName(RoleEnum.ADMIN).orElseThrow();
+            Role doctorRole = roleRepo.findByName(RoleEnum.DOCTOR).orElseThrow();
+            Role patientRole = roleRepo.findByName(RoleEnum.PATIENT).orElseThrow();
+
+            entityManager.detach(adminRole); // If needed
+            entityManager.detach(doctorRole); // If needed
+            entityManager.detach(patientRole); // If needed
+
+
+            // Users
+            User admin = new User("admin@med.org", "Alice", "Admin", "pass123", adminRole);
+            User doc1 = new User("doc1@med.org", "Gregory", "House", "pass123", doctorRole);
+            User doc2 = new User("doc2@med.org", "Meredith", "Grey", "pass123", doctorRole);
+            User pat1 = new User("pat1@med.org", "Charlie", "Brown", "pass123", patientRole);
+            User pat2 = new User("pat2@med.org", "Lucy", "Heart", "pass123", patientRole);
+            User pat3 = new User("pat3@med.org", "Michael", "Stone", "pass123", patientRole);
+
+            userRepo.saveAll(List.of(admin, doc1, doc2, pat1, pat2, pat3));
+
+            // Hospitals
+            Hospital h1 = new Hospital("Central Hospital", "Main St 1");
+            Hospital h2 = new Hospital("Green Valley Clinic", "Oak Avenue 12");
+            hospitalRepo.saveAll(List.of(h1, h2));
+
+            // Insurances
+            Insurance ins1 = new Insurance("Premium Plan", "Covers surgery and hospitalization");
+            Insurance ins2 = new Insurance("Basic Plan", "Covers general outpatient visits");
+            insuranceRepo.saveAll(List.of(ins1, ins2));
+
+            // Doctors
+            Doctor d1 = new Doctor(doc1, h1.getId(), "Chief Surgeon");
+            Doctor d2 = new Doctor(doc2, h2.getId(), "Resident");
+            doctorRepo.saveAll(List.of(d1, d2));
+
+            // Patients
+            Patient p1 = new Patient(pat1, "MRN10001", ins1.getId());
+            Patient p2 = new Patient(pat2, "MRN10002", ins2.getId());
+            Patient p3 = new Patient(pat3, "MRN10003", ins1.getId());
+            patientRepo.saveAll(List.of(p1, p2, p3));
+
+            // Appointments
+            Appointment appt1 = new Appointment(LocalDateTime.now().plusDays(1), d1);
+            Appointment appt2 = new Appointment(LocalDateTime.now().plusDays(2), d2);
+            Appointment appt3 = new Appointment(LocalDateTime.now().plusDays(3), d2);
+            appointmentRepo.saveAll(List.of(appt1, appt2, appt3));
+
+            // Medical Records
+            MedicalRecord rec1 = new MedicalRecord(p1, d1.getId(), appt1.getId(), "Flu", "Rest & hydration", LocalDateTime.now());
+            MedicalRecord rec2 = new MedicalRecord(p2, d2.getId(), appt2.getId(), "Allergy", "Antihistamines", LocalDateTime.now());
+            MedicalRecord rec3 = new MedicalRecord(p3, d2.getId(), appt3.getId(), "Sprained Ankle", "Cold compress", LocalDateTime.now());
+            medicalRecordRepo.saveAll(List.of(rec1, rec2, rec3));
+
+            // Medications
+            Medication m1 = new Medication("Ibuprofen", "Painkiller", "400mg");
+            Medication m2 = new Medication("Loratadine", "Antihistamine", "10mg");
+            medicationRepo.saveAll(List.of(m1, m2));
+
+            // Prescriptions
+            Prescription pr1 = new Prescription(rec1, m1, 10, "Take after meals");
+            Prescription pr2 = new Prescription(rec2, m2, 5, "Once daily");
+            prescriptionRepo.saveAll(List.of(pr1, pr2));
+
+            // Services
+            Service s1 = new Service("Blood Test", 25.0, 15);
+            Service s2 = new Service("MRI Scan", 300.0, 60);
+            Service s3 = new Service("Vaccination", 20.0, 10);
+            serviceRepo.saveAll(List.of(s1, s2, s3));
+
+            // Payments
+            Payment pay1 = new Payment(100.0, pat1);
+            Payment pay2 = new Payment(200.0, pat2);
+            paymentRepo.saveAll(List.of(pay1, pay2));
+
+            // App
+            NbpApp app = new NbpApp("APP001", admin, LocalDate.now().plusYears(1));
+            appsRepo.save(app);
+        };
+    }
+}
