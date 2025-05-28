@@ -1,11 +1,14 @@
 package ba.menit.nbp.controllers;
 
+import ba.menit.nbp.dtos.UserDto;
 import ba.menit.nbp.entities.User;
 import ba.menit.nbp.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,9 +30,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
+
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAll());
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = userService.getAll().stream()
+                .map(user -> new UserDto(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(users);
     }
 
 //    @PutMapping("/{id}")

@@ -2,6 +2,7 @@ package ba.menit.nbp.controllers;
 
 import ba.menit.nbp.dtos.LoginUserDto;
 import ba.menit.nbp.dtos.RegisterUserDto;
+import ba.menit.nbp.dtos.UserDto;
 import ba.menit.nbp.entities.User;
 import ba.menit.nbp.response.LoginResponse;
 import ba.menit.nbp.services.AuthenticationService;
@@ -40,14 +41,24 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
 
-        String jwtToken = jwtService.generateToken((UserDetails) authenticatedUser);
+        String jwtToken = jwtService.generateToken(authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
+        UserDto userDto = new UserDto(
+                authenticatedUser.getId(),
+                authenticatedUser.getFirstName(),
+                authenticatedUser.getLastName(),
+                authenticatedUser.getEmail(),
+                authenticatedUser.getRole().getName().name()
+        );
+        loginResponse.setUser(userDto);
+
         return ResponseEntity.ok(loginResponse);
     }
+
 
     @PostMapping("/request-reset-password")
     public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {

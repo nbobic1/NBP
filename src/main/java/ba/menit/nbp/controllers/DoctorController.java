@@ -2,7 +2,9 @@ package ba.menit.nbp.controllers;
 
 
 import ba.menit.nbp.entities.Doctor;
+import ba.menit.nbp.entities.DoctorStatistics;
 import ba.menit.nbp.services.DoctorService;
+import ba.menit.nbp.services.DoctorStatisticsService;
 import ba.menit.nbp.services.PdfExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ public class DoctorController {
     @Autowired
     private DoctorService doctorService;
 
+    @Autowired
+    private DoctorStatisticsService statisticsService;
+
     @PostMapping
     public ResponseEntity<Doctor> create(@RequestBody Doctor doctor) {
         return ResponseEntity.ok(doctorService.create(doctor));
@@ -36,10 +41,9 @@ public class DoctorController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<List<Map<String, Object>>> getStats() {
-        return ResponseEntity.ok(doctorService.getStats());
+    public List<DoctorStatistics> getDoctorStats() {
+        return statisticsService.getStatistics();
     }
-
     @GetMapping("/stats/pdf")
     public ResponseEntity<byte[]> exportStatsPdf() {
         List<Map<String, Object>> stats = doctorService.getStats();

@@ -62,7 +62,7 @@ private Long id;
     }
 
     public String getRoleString(){
-        return this.role.toString();
+        return this.role.getName().toString();
     }
 
     public User setRole(Role role) {
