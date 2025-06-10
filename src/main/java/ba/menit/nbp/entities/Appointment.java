@@ -1,5 +1,6 @@
 package ba.menit.nbp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -18,9 +19,18 @@ public class Appointment {
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
-    @ManyToOne(optional = false)
+//    @ManyToOne(optional = false)
+//    @JoinColumn(name = "patient_id", nullable = false)
+//    private Patient patient;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "service_id", nullable = false)
+    private Service service;
 
     public Long getId() {
         return id;
@@ -50,18 +60,21 @@ public class Appointment {
         this.patient = patient;
     }
 
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Service getService() {
+        return service;
+    }
+
+    public void setService(Service service) {
+        this.service = service;
+    }
+
     public Appointment() {
 
     }
 
-    public Appointment(LocalDateTime startTime, Doctor doctor) {
-        this.startTime = startTime;
-        this.doctor = doctor;
-    }
 
-    public Appointment(Long id, LocalDateTime startTime, Doctor doctor) {
-        this.id = id;
-        this.startTime = startTime;
-        this.doctor = doctor;
-    }
 }

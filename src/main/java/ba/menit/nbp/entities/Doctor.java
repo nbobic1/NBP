@@ -61,6 +61,7 @@ public class Doctor {
     public Doctor() {
     }
 
+
     public Doctor(User user, Long hospitalId, String seniority) {
         this.user = user;
         this.hospitalId = hospitalId;

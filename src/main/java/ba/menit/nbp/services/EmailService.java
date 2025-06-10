@@ -18,4 +18,13 @@ public class EmailService {
         message.setText("Click the link to reset your password:\n\n" + link);
         mailSender.send(message);
     }
+
+    public void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("efejzagic2@etf.unsa.ba");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
 }

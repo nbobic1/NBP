@@ -1,8 +1,10 @@
 package ba.menit.nbp.controllers;
 
 
+import ba.menit.nbp.dtos.DoctorDto;
 import ba.menit.nbp.entities.Doctor;
 import ba.menit.nbp.entities.DoctorStatistics;
+import ba.menit.nbp.entities.Patient;
 import ba.menit.nbp.services.DoctorService;
 import ba.menit.nbp.services.DoctorStatisticsService;
 import ba.menit.nbp.services.PdfExportService;
@@ -36,8 +38,12 @@ public class DoctorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Doctor>> getAll() {
-        return ResponseEntity.ok(doctorService.getAll());
+    public ResponseEntity<List<DoctorDto>> getAllDoctors() {
+        List<DoctorDto> doctors = doctorService.getAllDoctors();
+        if (doctors.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(doctors);
     }
 
     @GetMapping("/stats")
@@ -64,5 +70,12 @@ public class DoctorController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         doctorService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<Doctor> getPatientsByUserId(@PathVariable Long userId) {
+        Doctor doctor = doctorService.getByUserId(userId);
+
+        return ResponseEntity.ok(doctor);
     }
 }

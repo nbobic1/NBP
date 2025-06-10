@@ -1,6 +1,7 @@
 package ba.menit.nbp.services;
 
 
+import ba.menit.nbp.entities.Doctor;
 import ba.menit.nbp.entities.MedicalRecord;
 import ba.menit.nbp.repositories.MedicalRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,5 +48,9 @@ public class MedicalRecordService {
     }
     public List<MedicalRecord> getByPatientId(Long patientId) {
         return medicalRecordRepository.findByPatientId(patientId);
+    }
+
+    public List<MedicalRecord> getByDoctorId(Long userId) {
+        return medicalRecordRepository.findByDoctorId(userId);
     }
 }

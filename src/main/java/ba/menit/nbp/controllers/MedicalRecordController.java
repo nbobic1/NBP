@@ -1,8 +1,14 @@
 package ba.menit.nbp.controllers;
 
 
+import ba.menit.nbp.dtos.MedicalRecordDto;
+import ba.menit.nbp.entities.Doctor;
 import ba.menit.nbp.entities.MedicalRecord;
+import ba.menit.nbp.entities.Patient;
+import ba.menit.nbp.services.DoctorService;
 import ba.menit.nbp.services.MedicalRecordService;
+import ba.menit.nbp.services.PatientService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +21,10 @@ public class MedicalRecordController {
 
     @Autowired
     private MedicalRecordService medicalRecordService;
+    @Autowired
+    private DoctorService doctorService;
+    @Autowired
+    private PatientService patientService;
 
     @PostMapping
     public ResponseEntity<MedicalRecord> create(@RequestBody MedicalRecord record) {
@@ -49,6 +59,25 @@ public class MedicalRecordController {
 
     @GetMapping("/by-patient/{patientId}")
     public ResponseEntity<List<MedicalRecord>> getByPatientId(@PathVariable Long patientId) {
-        return ResponseEntity.ok(medicalRecordService.getByPatientId(patientId));
+        Patient patient = patientService.getByUserId(patientId);
+        return ResponseEntity.ok(medicalRecordService.getByPatientId(patient.getId()));
+    }
+
+    @Transactional
+    @GetMapping("/by-doctor/{doctorId}")
+    public ResponseEntity<List<MedicalRecordDto>> getRecordsByDoctor(@PathVariable Long doctorId) {
+        Doctor doctor = doctorService.getByUserId(doctorId);
+        List<MedicalRecord> records = medicalRecordService.getByDoctorId(doctor.getId());
+        List<MedicalRecordDto> result = records.stream().map(r ->
+                new MedicalRecordDto(
+                        r.getId(),
+                        r.getPatient().getUser().getFirstName(),
+                        r.getPatient().getUser().getLastName(),
+                        r.getDiagnosis(),
+                        r.getTreatment(),
+                        r.getRecordDate()
+                )
+        ).toList();
+        return ResponseEntity.ok(result);
     }
 }

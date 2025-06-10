@@ -1,10 +1,15 @@
 package ba.menit.nbp.controllers;
 
+import ba.menit.nbp.dtos.UserCreateDto;
 import ba.menit.nbp.dtos.UserDto;
-import ba.menit.nbp.entities.User;
+import ba.menit.nbp.entities.*;
+import ba.menit.nbp.repositories.RoleRepository;
+import ba.menit.nbp.services.DoctorService;
+import ba.menit.nbp.services.PatientService;
 import ba.menit.nbp.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,15 +24,48 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private PatientService patientService;
+    @Autowired
+    private DoctorService doctorService;
+
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.create(user));
+    public ResponseEntity<User> createUser(@RequestBody UserCreateDto dto) {
+        Role role = roleRepository.findById(dto.roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        User user = new User(dto.email, dto.firstName, dto.lastName, dto.password, role);
+        User createdUser = userService.create(user);
+        if(role.getName() == RoleEnum.PATIENT) {
+            Patient patient = new Patient(
+                createdUser
+            );
+            patientService.create(patient);
+        }
+        else if(role.getName() == RoleEnum.DOCTOR) {
+            Doctor doctor = new Doctor(
+                    createdUser,
+                    1L, "Porodicni"
+            );
+            doctorService.create(doctor);
+        }
+        return ResponseEntity.ok(createdUser);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getById(id));
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+        User user = userService.getById(id);
+        UserDto userDto = new UserDto(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRoleString()
+        );
+        return ResponseEntity.ok(userDto);
     }
 
 
