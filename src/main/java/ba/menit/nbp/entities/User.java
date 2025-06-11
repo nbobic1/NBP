@@ -42,6 +42,12 @@ private Long id;
    @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
+    @Column(name = "profile_picture", columnDefinition = "BYTEA")
+    private byte[] profilePicture;
+
+
+
+
     public User(String email, String firstName, String lastName, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -182,5 +188,13 @@ private Long id;
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

@@ -6,6 +6,10 @@ public class ServiceDto {
     private Double price;
     private Integer durationInMin;
 
+
+    public ServiceDto() {
+    }
+
     public ServiceDto(Long id, String name, Double price, Integer durationInMin) {
         this.id = id;
         this.name = name;

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -93,4 +94,46 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/profile-picture")
+    public ResponseEntity<String> uploadProfilePicture(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            User user = userService.getById(id);
+            user.setProfilePicture(file.getBytes());
+            userService.create(user);
+            return ResponseEntity.ok("Profile picture uploaded successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error uploading profile picture.");
+        }
+    }
+    @GetMapping("/{id}/profile-picture")
+    public ResponseEntity<byte[]> getProfilePicture(@PathVariable Long id) {
+        User user = userService.getById(id);
+        byte[] imageData = user.getProfilePicture();
+        if (imageData == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().header("Content-Type", "image/jpeg").body(imageData);
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<?> createUsersBulk(@RequestBody List<UserCreateDto> dtos) {
+        for (UserCreateDto dto : dtos) {
+            Role role = roleRepository.findById(dto.roleId)
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+
+            User user = new User(dto.email, dto.firstName, dto.lastName, dto.password, role);
+            User createdUser = userService.create(user);
+
+            if (role.getName() == RoleEnum.PATIENT) {
+                patientService.create(new Patient(createdUser));
+            } else if (role.getName() == RoleEnum.DOCTOR) {
+                doctorService.create(new Doctor(createdUser, 1L, "Porodicni"));
+            }
+        }
+        return ResponseEntity.ok("Users imported successfully");
+    }
+
+
+
 }
